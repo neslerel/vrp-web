@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f6fb4'/%3E%3Cpath d='M16 7v10M9 22l7-5 7 5' stroke='white' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" />
+    <title>VRP — Clarke &amp; Wright y búsqueda tabú</title>
+    <meta name="description" content="Aplicación didáctica del problema de rutas de vehículos (VRP): algoritmo de los ahorros de Clarke &amp; Wright y búsqueda tabú, paso a paso." />
+  </head>
+  <body>
+    <div id="app">
+      <header class="bar">
+        <h1>Problema de rutas de vehículos (VRP)</h1>
+        <div class="controls">
+          <label>Puntos de entrega <input id="inN" type="number" min="2" max="60" value="15" /></label>
+          <label>Vehículos <input id="inK" type="number" min="1" max="20" value="4" /></label>
+          <label>Capacidad <input id="inQ" type="number" min="5" max="2000" step="10" value="100" /></label>
+          <label>Semilla (0 = azar) <input id="inSeed" type="number" min="0" max="999999" value="0" /></label>
+          <button id="btnNew" class="primary">Generar problema</button>
+          <button id="btnMatrix">Matriz de distancias</button>
+          <button id="btnShare" title="Copia un enlace que reproduce este mismo problema">Copiar enlace</button>
+        </div>
+        <div class="controls">
+          <label>Algoritmo
+            <select id="selAlgo">
+              <option value="cw">Clarke &amp; Wright (ahorros)</option>
+              <option value="tabu">Búsqueda tabú</option>
+            </select>
+          </label>
+          <label class="tabu-only">Inicial
+            <select id="selInit">
+              <option value="cw">Clarke &amp; Wright</option>
+              <option value="random">Aleatoria</option>
+            </select>
+          </label>
+          <label class="tabu-only">Iteraciones <input id="inIter" type="number" min="5" max="2000" step="10" value="100" /></label>
+          <label class="tabu-only">Tenencia tabú <input id="inTenure" type="number" min="1" max="50" value="7" /></label>
+          <span class="sep"></span>
+          <button id="btnStep">Paso ▶</button>
+          <button id="btnMerge">Siguiente fusión ⏭</button>
+          <button id="btnAuto">Automático ⏵</button>
+          <button id="btnAll">Resolver todo ⏩</button>
+          <button id="btnReset">Reiniciar ↺</button>
+          <label>Velocidad <input id="inSpeed" type="range" min="1" max="10" value="5" /></label>
+        </div>
+      </header>
+
+      <main class="grid">
+        <section class="mapbox"><canvas id="map" aria-label="Mapa de la central, los puntos de entrega y las rutas"></canvas></section>
+        <section class="side">
+          <h2>Rutas</h2>
+          <div class="tablewrap routes-wrap"><table id="tblRoutes"></table></div>
+          <h2 id="histTitle"></h2>
+          <canvas id="chart" class="tabu-only" aria-label="Convergencia de la búsqueda tabú"></canvas>
+          <div class="tablewrap hist-wrap" id="histWrap"><table id="tblHist"></table></div>
+        </section>
+      </main>
+
+      <div id="status" class="status" role="status"></div>
+      <div id="summary" class="summary"></div>
+    </div>
+
+    <dialog id="dlgMatrix">
+      <form method="dialog" class="dlg-head">
+        <strong>Matriz de distancias</strong>
+        <button>Cerrar</button>
+      </form>
+      <div class="tablewrap matrix-wrap"><table id="tblMatrix"></table></div>
+      <p id="matrixInfo" class="info"></p>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
